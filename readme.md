@@ -1,7 +1,7 @@
 # Laravel 5 Scaffold Generator
 
 
-Hi, this is a scaffold generator for Laravel 5.
+Hi, this is a scaffold generator for Laravel 5. Inspired by laraviet/l5scaffold.
 
 
 
