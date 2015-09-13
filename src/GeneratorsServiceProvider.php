@@ -36,7 +36,7 @@ class GeneratorsServiceProvider extends ServiceProvider {
 	private function registerScaffoldGenerator()
 	{
 		$this->app->singleton('command.larascaf.scaffold', function ($app) {
-			return $app['Laraviet\L5scaffold\Commands\ScaffoldMakeCommand'];
+			return $app['Prishan\Laravel-scaffolds\Commands\ScaffoldMakeCommand'];
 		});
 
 		$this->commands('command.larascaf.scaffold');
