@@ -1,5 +1,5 @@
 {
-  "name": "prishan/l5scaffold",
+  "name": "prishan/laravel-scaffolds",
   "description": "Extend Laravel 5's generators scaffold.",
   "keywords": ["laravel", "generators", "scaffold" , "laravel5"],
   "license": "MIT",
@@ -16,7 +16,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Prishan\\L5scaffold\\": "src/"
+      "Prishan\\Laravel-scaffolds\\": "src/"
     }
   }
 }
