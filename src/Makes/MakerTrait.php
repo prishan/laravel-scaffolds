@@ -6,13 +6,13 @@
  * Time: 5:00 PM
  */
 
-namespace Laraviet\L5scaffold\Makes;
+namespace Prishan\LaravelScaffolds\Makes;
 
 
 
 
 use Illuminate\Filesystem\Filesystem;
-use Laraviet\L5scaffold\Commands\ScaffoldMakeCommand;
+use Prishan\LaravelScaffolds\Commands\ScaffoldMakeCommand;
 
 trait MakerTrait {
 

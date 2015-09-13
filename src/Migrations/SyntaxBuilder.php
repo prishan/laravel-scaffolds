@@ -1,13 +1,13 @@
 <?php
 
-namespace Laraviet\L5scaffold\Migrations;
+namespace Prishan\LaravelScaffolds\Migrations;
 
-use Laraviet\L5scaffold\GeneratorException;
+use Prishan\LaravelScaffolds\GeneratorException;
 
 
 /**
  * Class SyntaxBuilder with modifications by Fernando
- * @package Laraviet\L5scaffold\Migrations
+ * @package Prishan\LaravelScaffolds\Migrations
  * @author Jeffrey Way <jeffrey@jeffrey-way.com>
  */
 class SyntaxBuilder

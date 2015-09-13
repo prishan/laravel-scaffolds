@@ -1,18 +1,18 @@
 <?php
 
-namespace Laraviet\L5scaffold\Commands;
+namespace Prishan\LaravelScaffolds\Commands;
 
 use Illuminate\Console\AppNamespaceDetectorTrait;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Composer;
-use Laraviet\L5scaffold\Makes\MakeController;
-use Laraviet\L5scaffold\Makes\MakeLayout;
-use Laraviet\L5scaffold\Makes\MakeMigration;
-use Laraviet\L5scaffold\Makes\MakeModel;
-use Laraviet\L5scaffold\Makes\MakerTrait;
-use Laraviet\L5scaffold\Makes\MakeSeed;
-use Laraviet\L5scaffold\Makes\MakeView;
+use Prishan\LaravelScaffolds\Makes\MakeController;
+use Prishan\LaravelScaffolds\Makes\MakeLayout;
+use Prishan\LaravelScaffolds\Makes\MakeMigration;
+use Prishan\LaravelScaffolds\Makes\MakeModel;
+use Prishan\LaravelScaffolds\Makes\MakerTrait;
+use Prishan\LaravelScaffolds\Makes\MakeSeed;
+use Prishan\LaravelScaffolds\Makes\MakeView;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 

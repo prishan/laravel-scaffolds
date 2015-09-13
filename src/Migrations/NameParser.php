@@ -1,10 +1,10 @@
 <?php
 
-namespace Laraviet\L5scaffold\Migrations;
+namespace Prishan\LaravelScaffolds\Migrations;
 
 /**
  * Class NameParser
- * @package Laraviet\L5scaffold\Migrations with modifications by Fernando
+ * @package Prishan\LaravelScaffolds\Migrations with modifications by Fernando
  * @author Jeffrey Way <jeffrey@jeffrey-way.com>
  */
 class NameParser

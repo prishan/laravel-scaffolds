@@ -6,13 +6,13 @@
  * Time: 10:34 PM
  */
 
-namespace Laraviet\L5scaffold\Makes;
+namespace Prishan\LaravelScaffolds\Makes;
 
 
 use Illuminate\Filesystem\Filesystem;
-use Laraviet\L5scaffold\Commands\ScaffoldMakeCommand;
-use Laraviet\L5scaffold\Migrations\SchemaParser;
-use Laraviet\L5scaffold\Migrations\SyntaxBuilder;
+use Prishan\LaravelScaffolds\Commands\ScaffoldMakeCommand;
+use Prishan\LaravelScaffolds\Migrations\SchemaParser;
+use Prishan\LaravelScaffolds\Migrations\SyntaxBuilder;
 
 class MakeMigration {
     use MakerTrait;

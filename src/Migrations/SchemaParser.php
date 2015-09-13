@@ -1,10 +1,10 @@
 <?php
 
-namespace Laraviet\L5scaffold\Migrations;
+namespace Prishan\LaravelScaffolds\Migrations;
 
 /**
  * Class SchemaParser with modifications by Fernando
- * @package Laraviet\L5scaffold\Migrations
+ * @package Prishan\LaravelScaffolds\Migrations
  * @author Jeffrey Way <jeffrey@jeffrey-way.com>
  */
 class SchemaParser
