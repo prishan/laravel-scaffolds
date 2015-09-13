@@ -10,7 +10,7 @@ Hi, this is a scaffold generator for Laravel 5. Inspired by laraviet/l5scaffold.
 ### Step 1: Install Through Composer
 
 ```
-composer require 'prishan/l5scaffold' --dev
+composer require 'prishan/laravel-scaffold' --dev
 ```
 
 ### Step 2: Add the Service Provider
@@ -18,7 +18,7 @@ composer require 'prishan/l5scaffold' --dev
 Open `config/app.php` and, to your **providers** array at the bottom, add:
 
 ```
-"Prishan\L5scaffold\GeneratorsServiceProvider"
+"Prishan\Laravel-scaffold\GeneratorsServiceProvider"
 ```
 
 ### Step 3: Run Artisan!
@@ -81,8 +81,5 @@ Open `config/error_display.php` and update config:
 Views location for error message: `resources/views/layout/error_display/`
 
 ## Scaffold Screenshot
-![image](http://i59.tinypic.com/2mr8obk.png)
 
-![image](http://i57.tinypic.com/2dqqb2r.png)
-
-![image](http://i62.tinypic.com/30ruvdk.png)
+comming soon
