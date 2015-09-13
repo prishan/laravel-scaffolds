@@ -1,6 +1,6 @@
 <?php
 
-namespace Laraviet\L5scaffold;
+namespace Prishan\LaravelScaffolds;
 
 class GeneratorException extends \Exception {
 
