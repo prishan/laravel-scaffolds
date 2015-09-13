@@ -81,8 +81,5 @@ Open `config/error_display.php` and update config:
 Views location for error message: `resources/views/layout/error_display/`
 
 ## Scaffold Screenshot
-![image](http://i59.tinypic.com/2mr8obk.png)
 
-![image](http://i57.tinypic.com/2dqqb2r.png)
-
-![image](http://i62.tinypic.com/30ruvdk.png)
+comming soon
