@@ -1,28 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>LARAVEL 5 ADMIN</title>
+    <title>{{{ $___appname or 'App' }}}@yield('title', !is_null(Route::currentRouteName())?' - '.ucwords(str_replace('.',' - ',Route::currentRouteName())):'' )</title>
 
-    <!-- Bootstrap Core CSS -->
-    <link href="{{ asset('admins/css/bootstrap.min.css') }}" rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="{{ asset('/admins/css/app.css') }}" rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link href="{{ asset('admins/css/sb-admin.css') }}" rel="stylesheet">
+    <link href="{{ asset('/admins/css/custom.css') }}" rel="stylesheet">
 
     <!-- Morris Charts CSS -->
     <link href="{{ asset('admins/css/plugins/morris.css') }}" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="{{ asset('admins/font-awesome/css/font-awesome.min.css') }}" rel="stylesheet" type="text/css">
-
-    <link href="{{ asset('admins/css/main.css') }}" rel="stylesheet">
+    <link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -31,79 +27,75 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     @yield('css_open')
+    {!! Rapyd::styles() !!} 
 </head>
-
 <body>
-
-    <div id="wrapper">
-
-        <!-- Navigation -->
-        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="#">Laravel 5 Admin</a>
-            </div>
-            <!-- Top Menu Items -->
-            <ul class="nav navbar-right top-nav">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>
-                        Username
-                     <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a href="#"><i class="fa fa-fw fa-user"></i> Logout</a>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <div class="collapse navbar-collapse navbar-ex1-collapse">
-                <ul class="nav navbar-nav side-nav">
-                    <li>
-                        <a href="#"><i class="fa fa-fw fa-dashboard"></i>Link 1</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-fw fa-dashboard"></i>Link 2</a>
-                    </li>
-                    <li>
-                        <a href="#"><i class="fa fa-fw fa-dashboard"></i>Link 3</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </nav>
-
-        <div id="page-wrapper">
-
-            <div class="container-fluid">
-
-                <!-- Page Heading -->
-                <div class="row">
-                    <div class="col-lg-12">
-                        @yield('content')
-                    </div>
-                </div>
-                <!-- /.row -->
-
-            </div>
-            <!-- /.container-fluid -->
-
+    <!-- Navigation -->
+    <nav class="navbar navbar-default" role="navigation">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">{{{ $___appname or 'App' }}}</a>
         </div>
-        <!-- /#page-wrapper -->
+        <!-- Top Menu Items -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li><a href="{{ url('/') }}">Home</a></li>
+            </ul>
+            <!-- Top Right Menu -->
+            <ul class="nav navbar-nav navbar-right">
+                @if (Auth::guest())
+                    <li><a href="{{ url('/auth/login') }}">Login</a></li>
+                    <li><a href="{{ url('/auth/register') }}">Register</a></li>
+                @else
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="{{ url('/auth/logout') }}">Logout</a></li>
+                        </ul>
+                    </li>
+                @endif
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </nav>
 
+    <div class="container-fluid theme-showcase" role="main">
+        @if(isset($sideMenu) && !empty($sideMenu)){{-- If sidebar menu items exists divide the page into contents and sidebar --}}
+            <!-- content -->
+            <div class="col-xs-12 col-sm-10">
+                    @yield('content')
+            </div><!-- /content -->
+            <!-- sidebar -->
+            <div class="col-xs-6 col-sm-2 sidebar-offcanvas" role="navigation" id="sidebar">
+                    <h3>&nbsp;</h3>
+                    <ul class="nav nav-sidebar">
+                        @foreach ($sideMenu as $menuItem)
+                            <li class="list-group-item">
+                                <a href="{{ $menuItem['route'] }}"><span class="glyphicon {{ $menuItem['class'] }}"></span> {{ $menuItem['name'] }}</a>
+                            </li>
+                        @endforeach
+                    </ul>
+            </div><!-- /sidebar -->
+        @else{{-- If no side bar only show the contents --}}
+            <!-- content -->
+            @yield('content')
+            <!-- /content -->
+        @endif
     </div>
-    <!-- /#wrapper -->
+    <!-- /#page-wrapper -->
 
-    <!-- jQuery -->
-    <script src="{{ asset('admins/js/jquery.js') }}"></script>
-
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{ asset('admins/js/bootstrap.min.js') }}"></script>
+    <!-- Scripts -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="{{ asset('/admins/js/bootstrap-confirmation.min.js') }}"></script>
+    {!! Rapyd::scripts() !!}
+    <script src="{{ asset('/admins/js/custom.js') }}"></script>
     @yield('script_close')
 </body>
 </html>
