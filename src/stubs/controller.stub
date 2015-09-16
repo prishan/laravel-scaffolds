@@ -5,8 +5,22 @@ use App\Http\Controllers\Controller;
 
 use {{model_path}};
 use Illuminate\Http\Request;
+use App\CustomVendorClass\DataGrid\DataGrid;
+use Zofe\Rapyd\DataFilter\DataFilter;
 
 class {{class}} extends Controller {
+    
+        /**
+         * Constrct Controller
+         * Initiallize sidebar menu items
+         * 
+         */
+        public function __construct()
+        {
+                $this->sideMenu = array(
+                        array('name'=>'Create','route'=>action('Admin\{{model_name_class}}Controller@create'),'class'=>'glyphicon-plus'),
+                );
+        }
 
 	/**
 	 * Display a listing of the resource.
@@ -15,9 +29,27 @@ class {{class}} extends Controller {
 	 */
 	public function index()
 	{
-		${{model_name_var}} = {{model_name_class}}::all();
+		$filter = DataFilter::source(new {{model_name_class}});
+                $filter->attributes(array('class'=>'form-inline'));
+                // uncomment the filters required
+                {{filter_index_fields}}
+                $filter->submit('search');
+                $filter->reset('reset');
 
-		return view('admin.{{model_name_var}}.index', compact('{{model_name_var}}'));
+                $grid = DataGrid::source($filter);
+                
+                // Uncomment the fields required in grid
+                {{grid_index_fields}}
+                
+                $grid->edit(action('Admin\{{model_name_class}}Controller@index'), 'Actions','show|modify|delete'); //shortcut to link DataEdit
+                $grid->orderBy('id','asc'); //default orderby
+                $grid->paginate(10); //pagination
+
+                return view('admin.{{model_name_var}}.index')->with([
+                    'grid' => $grid,
+                    'filter' => $filter,
+                    'sideMenu' => $this->sideMenu,
+                ]);
 	}
 
 	/**

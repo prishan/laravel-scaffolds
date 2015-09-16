@@ -134,10 +134,17 @@ class MakeController
 
 
         // Create controllers fields
-        $schema = (new SyntaxBuilder)->create($schema, $this->scaffoldCommandObj->getMeta(), 'controller');
-        $stub = str_replace('{{model_fields}}', $schema, $stub);
-
-
+        $schemaText = (new SyntaxBuilder)->create($schema, $this->scaffoldCommandObj->getMeta(), 'controller');
+        $stub = str_replace('{{model_fields}}', $schemaText, $stub);
+        
+        // Create filter fields for index
+        $schemaText = (new SyntaxBuilder)->create($schema, $this->scaffoldCommandObj->getMeta(), 'filter-index-fields');
+        $stub = str_replace('{{filter_index_fields}}', $schemaText, $stub);
+        
+        // Create grid fields for index
+        $schemaText = (new SyntaxBuilder)->create($schema, $this->scaffoldCommandObj->getMeta(), 'grid-index-fields');
+        $stub = str_replace('{{grid_index_fields}}', $schemaText, $stub);
+        
         return $this;
     }
 }

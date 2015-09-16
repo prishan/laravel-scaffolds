@@ -25,7 +25,7 @@ class SyntaxBuilder
      *
      * @param  array $schema
      * @param  array $meta
-     * @param string $type
+     * @param  string $type
      * @return string
      * @throws GeneratorException
      */
@@ -68,7 +68,17 @@ class SyntaxBuilder
 
             $fieldsc = $this->createSchemaForViewMethod($schema, $meta, 'create-content');
             return $fieldsc;
-
+            
+        } else if ($type == 'filter-index-fields') {
+            
+            $fieldsc = $this->createSchemaForFilterMethod($schema, $meta, 'index-content');
+            return $fieldsc;
+            
+        } else if ($type == 'grid-index-fields') {
+            
+            $fieldsc = $this->createSchemaForGridMethod($schema, $meta, 'index-content');
+            return $fieldsc;
+            
         } else {
             throw new \Exception("Type not found in syntaxBuilder");
         }
@@ -286,8 +296,34 @@ class SyntaxBuilder
                 str_repeat(' ', 21). $content .
                 str_repeat(' ', 21)."{!! \App\Libs\ErrorDisplay::getInstance()->displayIndividual(\$errors, \"%s\") !!}\n" .
                 str_repeat(' ', 16)."</div>", strtolower($field['name']), strtoupper($field['name']), strtolower($field['name']), strtolower($field['name']), strtolower($field['name']));
-
-
+        
+            
+        } elseif ($type == 'filter-index-content') {
+            
+            if (in_array(trim($field["type"]),["string","text","char","mediumText"])) {// string & text
+                $syntax = sprintf('$filter->add(\'%s\',\'%s\', \'text\');',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["decimal","double","float","integer","smallInteger","tinyInteger",])) {// numbers
+                $syntax = sprintf('$filter->add(\'%s\',\'%s\', \'text\')->clause(\'where\');',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["date","dateTime","time","timestamp"])) {// numbers
+                $syntax = sprintf('$filter->add(\'%s\',\'%s\', \'daterange\');',strtolower($field['name']),ucfirst($field['name']));
+            } else {
+                return '';
+            }
+            
+        } elseif ($type == 'grid-index-content') {
+            
+            if (in_array(trim($field["type"]),["string","char",])) { //string
+                $syntax = sprintf('$grid->add(\'%s\',\'%s\', true);',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["decimal","double","float","integer","smallInteger","tinyInteger",])) {//numbers
+                $syntax = sprintf('$grid->add(\'%s\',\'%s\', true);',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["text","mediumText",])) {// text
+                $syntax = sprintf('$grid->add(\'{{ substr($%s,0,20) }}...\',\'%s\');',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["date","dateTime","time","timestamp"])) {// date
+                $syntax = sprintf('$grid->add(\'%s\',\'%s\', true);',strtolower($field['name']),ucfirst($field['name']));
+            } else {
+                return '';
+            }
+            
         } else {
 
             // Fields to controller
@@ -361,6 +397,78 @@ class SyntaxBuilder
             return implode("\n" . str_repeat(' ', 20), $fields);
         }
 
+    }
+
+    /**
+     * Construct the filter fields
+     *
+     * @param $schema
+     * @param $meta
+     * @param string $type Params 'index' or ''
+     * @return string
+     */
+    private function createSchemaForFilterMethod($schema, $meta, $type = 'index-content')
+    {
+
+        if (!$schema) return '';
+
+        $fields = array_map(function ($field) use ($meta, $type) {
+            return $this->AddColumn($field, 'filter-' . $type, $meta);
+        }, $schema);
+        $fields = $this->cleanFields($fields);
+
+        // Format code
+        if ($type == 'index-content') {
+            return implode("\n" . str_repeat(' ', 16), $fields);
+        } else {
+            return '';
+        }
+
+    }
+
+    /**
+     * Construct the Grid fields
+     *
+     * @param $schema
+     * @param $meta
+     * @param string $type Params 'index' or ''
+     * @return string
+     */
+    private function createSchemaForGridMethod($schema, $meta, $type = 'index-content')
+    {
+
+        if (!$schema) return '';
+
+        $fields = array_map(function ($field) use ($meta, $type) {
+            return $this->AddColumn($field, 'grid-' . $type, $meta);
+        }, $schema);
+        $fields = $this->cleanFields($fields);
+        
+        // Format code
+        if ($type == 'index-content') {
+            return implode("\n" . str_repeat(' ', 16), $fields);
+        } else {
+            return '';
+        }
+
+    }
+    
+    /**
+     * Remove the empty fields from the fields array
+     * Comments additional fields
+     * 
+     * @param array $fields
+     * @param integer $commentAfter Use to determine the limit to comment from
+     * @return array Cleaned array
+     */
+    private function cleanFields(array $fields, $commentAfter = 4)
+    {
+        $fields = array_values(array_filter($fields));
+        array_walk($fields, function(&$field, $fieldNo, $commentAfter){
+            $field = ($fieldNo>=$commentAfter)?'// '.$field:$field;
+        }, $commentAfter);
+        
+        return $fields;
     }
 
 }
