@@ -77,7 +77,7 @@
                     <ul class="nav nav-sidebar">
                         @foreach ($sideMenu as $menuItem)
                             <li class="list-group-item">
-                                <a href="{{ $menuItem['route'] }}"><span class="glyphicon {{ $menuItem['class'] }}"></span> {{ $menuItem['name'] }}</a>
+                                <a href="{{ $menuItem['route'] }}" @if(isset($menuItem['html-options'])) @foreach($menuItem['html-options'] as $option=>$value) {{$option}}="{{$value}}"  @endforeach @endif ><span class="glyphicon {{{ $menuItem['icon'] or '' }}}"></span> {{ $menuItem['name'] }}</a>
                             </li>
                         @endforeach
                     </ul>
@@ -96,6 +96,7 @@
     <script src="{{ asset('/admins/js/bootstrap-confirmation.min.js') }}"></script>
     {!! Rapyd::scripts() !!}
     <script src="{{ asset('/admins/js/custom.js') }}"></script>
+    <script src="{{ asset('/admins/js/deleteForm.js') }}"></script>
     @yield('script_close')
 </body>
 </html>

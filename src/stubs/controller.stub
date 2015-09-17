@@ -18,7 +18,7 @@ class {{class}} extends Controller {
         public function __construct()
         {
                 $this->sideMenu = array(
-                        array('name'=>'Create','route'=>action('Admin\{{model_name_class}}Controller@create'),'class'=>'glyphicon-plus'),
+                        array('name'=>'Create','route'=>action('Admin\{{model_name_class}}Controller@create'),'icon'=>'glyphicon-plus'),
                 );
         }
 
@@ -89,7 +89,16 @@ class {{class}} extends Controller {
 	{
 		${{model_name_var_sgl}} = {{model_name_class}}::findOrFail($id);
 
-		return view('admin.{{model_name_var}}.show', compact('{{model_name_var_sgl}}'));
+		$this->sideMenu = array_merge([
+                    array('name'=>'List','route'=>action('Admin\{{model_name_class}}Controller@index'),'icon'=>'glyphicon-th-list',),
+                    array('name'=>'Update','route'=>action('Admin\{{model_name_class}}Controller@edit', $id),'icon'=>'glyphicon-pencil',),
+                    array('name'=>'Delete','route'=>action('Admin\{{model_name_class}}Controller@destroy', $id),'icon'=>'glyphicon-trash','html-options'=>array('data-method'=>'delete','data-confirm'=>'Are you sure?')),
+                ],  $this->sideMenu);
+
+		return view('admin.{{model_name_var}}.show')->with([
+                    '{{model_name_var_sgl}}' => ${{model_name_var_sgl}},
+                    'sideMenu' => $this->sideMenu,
+                ]);;
 	}
 
 	/**
