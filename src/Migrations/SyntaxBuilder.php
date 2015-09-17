@@ -264,10 +264,10 @@ class SyntaxBuilder
         } elseif ($type == 'view-show-content') {
 
             // Fields to show view
-            $syntax = sprintf("<div class=\"form-group\">\n" .
-                str_repeat(' ', 21)."<label for=\"%s\">%s</label>\n" .
-                str_repeat(' ', 21)."<p class=\"form-control-static\">{{\$%s->%s}}</p>\n" .
-                str_repeat(' ', 16)."</div>", strtolower($field['name']), strtoupper($field['name']), $meta['var_name'], strtolower($field['name']));
+            $syntax = sprintf("<tr class=\"{{row_class}}\">\n" .
+                str_repeat(' ', 21)."<th class=\"show-view-th\">%s</th>\n" .
+                str_repeat(' ', 21)."<td>{{\$%s->%s}}</td>\n" .
+                str_repeat(' ', 16)."</tr>", ucwords(str_replace('_', ' ', $field['name'])), $meta['var_name'], strtolower($field['name']));
 
 
         } elseif ($type == 'view-edit-content') {
@@ -387,7 +387,11 @@ class SyntaxBuilder
         $fields = array_map(function ($field) use ($meta, $type) {
             return $this->AddColumn($field, 'view-' . $type, $meta);
         }, $schema);
-
+        
+        // set odd and even rows
+        array_walk($fields, function(&$field, $key){
+            $field = str_replace('{{row_class}}', ($key%2==0?'even':'odd'), $field);
+        });
 
         // Format code
         if ($type == 'index-header') {
