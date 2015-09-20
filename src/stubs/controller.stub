@@ -7,6 +7,7 @@ use {{model_path}};
 use Illuminate\Http\Request;
 use App\CustomVendorClass\DataGrid\DataGrid;
 use Zofe\Rapyd\DataFilter\DataFilter;
+use Zofe\Rapyd\DataForm\DataForm;
 
 class {{class}} extends Controller {
     
@@ -59,7 +60,21 @@ class {{class}} extends Controller {
 	 */
 	public function create()
 	{
-		return view('admin.{{model_name_var}}.create');
+                $form = DataForm::source(new {{model_name_class}});
+                
+                {{form_create_fields}}
+                
+                $form->submit('Save');
+                $form->build();
+                
+                $this->sideMenu = array_merge([
+                    array('name'=>'List','route'=>action('Admin\{{model_name_class}}Controller@index'),'icon'=>'glyphicon-th-list',),
+                ]);
+                
+		return view('admin.{{model_name_var}}.create')->with([
+                    'form'=>$form,
+                    'sideMenu'=>$this->sideMenu,
+                ]);
 	}
 
 	/**

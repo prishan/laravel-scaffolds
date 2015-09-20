@@ -145,6 +145,10 @@ class MakeController
         $schemaText = (new SyntaxBuilder)->create($schema, $this->scaffoldCommandObj->getMeta(), 'grid-index-fields');
         $stub = str_replace('{{grid_index_fields}}', $schemaText, $stub);
         
+        // Create form fields
+        $schemaText = (new SyntaxBuilder)->create($schema, $this->scaffoldCommandObj->getMeta(), 'form-create-fields');
+        $stub = str_replace('{{form_create_fields}}', $schemaText, $stub);
+        
         return $this;
     }
 }

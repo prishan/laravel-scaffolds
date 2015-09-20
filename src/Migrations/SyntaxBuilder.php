@@ -79,6 +79,11 @@ class SyntaxBuilder
             $fieldsc = $this->createSchemaForGridMethod($schema, $meta, 'index-content');
             return $fieldsc;
             
+        } else if ($type == 'form-create-fields') {
+            
+            $fieldsc = $this->createSchemaForFormMethod($schema, $meta, 'create-content');
+            return $fieldsc;
+            
         } else {
             throw new \Exception("Type not found in syntaxBuilder");
         }
@@ -297,6 +302,19 @@ class SyntaxBuilder
                 str_repeat(' ', 21)."{!! \App\Libs\ErrorDisplay::getInstance()->displayIndividual(\$errors, \"%s\") !!}\n" .
                 str_repeat(' ', 16)."</div>", strtolower($field['name']), strtoupper($field['name']), strtolower($field['name']), strtolower($field['name']), strtolower($field['name']));
         
+        } elseif ($type == 'form-create-content') {
+            
+            if (in_array(trim($field["type"]),["string","char",])) {// string 
+                $syntax = sprintf('$form->add(\'%s\',\'%s\', \'text\');',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["text","mediumText",])) {// text
+                $syntax = sprintf('$form->add(\'%s\',\'%s\', \'textarea\')->attributes(array(\'rows\'=>4));',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["decimal","double","float","integer","smallInteger","tinyInteger",])) {// numbers
+                $syntax = sprintf('$form->add(\'%s\',\'%s\', \'text\');',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["date","dateTime","time","timestamp"])) {// numbers
+                $syntax = sprintf('$form->add(\'%s\',\'%s\', \'date\');',strtolower($field['name']),ucfirst($field['name']));
+            } else {
+                return '';
+            }
             
         } elseif ($type == 'filter-index-content') {
             
@@ -458,6 +476,33 @@ class SyntaxBuilder
     }
     
     /**
+     * Construct the Form fields
+     *
+     * @param $schema
+     * @param $meta
+     * @param string $type Params 'index' or ''
+     * @return string
+     */
+    private function createSchemaForFormMethod($schema, $meta, $type = 'create-content')
+    {
+
+        if (!$schema) return '';
+
+        $fields = array_map(function ($field) use ($meta, $type) {
+            return $this->AddColumn($field, 'form-' . $type, $meta);
+        }, $schema);
+        $fields = $this->cleanFields($fields,null);
+        
+        // Format code
+        if ($type == 'create-content') {
+            return implode("\n" . str_repeat(' ', 16), $fields);
+        } else {
+            return '';
+        }
+
+    }
+    
+    /**
      * Remove the empty fields from the fields array
      * Comments additional fields
      * 
@@ -469,7 +514,7 @@ class SyntaxBuilder
     {
         $fields = array_values(array_filter($fields));
         array_walk($fields, function(&$field, $fieldNo, $commentAfter){
-            $field = ($fieldNo>=$commentAfter)?'// '.$field:$field;
+            $field = (!is_null($commentAfter) && $fieldNo>=$commentAfter)?'// '.$field:$field;
         }, $commentAfter);
         
         return $fields;
