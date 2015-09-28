@@ -13,11 +13,17 @@
   "require": {
     "php": ">=5.4.0",
     "laravel/framework": "5.1.*",
-    "illuminate/support": "~5.0"
+    "illuminate/support": "~5.0",
+    "proengsoft/laravel-jsvalidation": "~1.1"
   },
   "autoload": {
     "psr-4": {
       "Prishan\\LaravelScaffolds\\": "src/"
     }
-  }
+  },
+  "scripts": {
+        "post-update-cmd": [
+            "php artisan vendor:publish --provider=\"Proengsoft\\JsValidation\\JsValidationServiceProvider\" --tag=public --force"
+        ]
+    }
 }
