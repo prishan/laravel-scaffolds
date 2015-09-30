@@ -101,6 +101,7 @@
     {!! Rapyd::scripts() !!}
     <script src="{{ asset('/admins/js/custom.js') }}"></script>
     <script src="{{ asset('/admins/js/deleteForm.js') }}"></script>
+    @yield('js_validation')
     @yield('script_close')
 </body>
 </html>

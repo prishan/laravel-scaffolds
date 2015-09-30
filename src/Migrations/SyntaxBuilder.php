@@ -310,8 +310,8 @@ class SyntaxBuilder
                 $syntax = sprintf('$form->add(\'%s\',\'%s\', \'textarea\')->attributes(array(\'rows\'=>4));',strtolower($field['name']),ucfirst($field['name']));
             } elseif (in_array(trim($field["type"]),["decimal","double","float","integer","smallInteger","tinyInteger",])) {// numbers
                 $syntax = sprintf('$form->add(\'%s\',\'%s\', \'text\');',strtolower($field['name']),ucfirst($field['name']));
-            } elseif (in_array(trim($field["type"]),["date","dateTime","time","timestamp"])) {// numbers
-                $syntax = sprintf('$form->add(\'%s\',\'%s\', \'date\');',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["date","dateTime","time","timestamp"])) {// date
+                $syntax = sprintf('$form->add(\'%s\',\'%s\', \'Prishan\LaravelScaffolds\DependentClasses\Rapyd\Field\DateValidated\')->format(\'Y/m/d\');',strtolower($field['name']),ucfirst($field['name']));
             } else {
                 return '';
             }

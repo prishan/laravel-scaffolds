@@ -26,6 +26,17 @@ class GeneratorsServiceProvider extends ServiceProvider {
 	{
 
 		$this->registerScaffoldGenerator();
+                
+                /*
+                 * Register the service provider for the dependency.
+                 */
+                $this->app->register('Proengsoft\JsValidation\JsValidationServiceProvider');
+                
+                /*
+                 * Create aliases for the dependency.
+                 */
+                $loader = \Illuminate\Foundation\AliasLoader::getInstance();
+                $loader->alias('JsValidator', 'Proengsoft\JsValidation\Facades\JsValidatorFacade');
 
 	}
 

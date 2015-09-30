@@ -8,7 +8,7 @@
     {!! \App\Libs\ErrorDisplay::getInstance()->displayAll($errors) !!}
 
     <div class="form">
-        <form role="form" id="pakaya-form" action="{{ action('Admin\{{ClassSingle}}Controller@store') }}" method="post">
+        <form role="form" id="{{classSingle}}-form" action="{{ action('Admin\{{ClassSingle}}Controller@store') }}" method="post">
             {!! csrf_field() !!}
             @foreach($form->fields as $field)
                 <div class="form-group col-sm-6{!! (\App\Libs\ErrorDisplay::getInstance()->displayIndividual($errors, $field->attributes['id'])!='') ? ' has-error':'' !!}">
@@ -23,4 +23,10 @@
     </div>
     <!--form-->
 
+@endsection
+
+@section('js_validation')
+<!-- Laravel Javascript Validation -->
+<script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
+{!! JsValidator::formRequest('App\Http\Requests\{{ClassSingle}}Request', '#{{classSingle}}-form'); !!}
 @endsection
