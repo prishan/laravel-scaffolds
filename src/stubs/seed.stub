@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+// use Laracasts\TestDummy\Factory;
 
 // composer require laracasts/testdummy
 use Laracasts\TestDummy\Factory as TestDummy;
@@ -9,6 +10,7 @@ class {{class}}TableSeeder extends Seeder {
 
     public function run()
     {
+        // Factory::$factoriesPath = 'database/factories';
         // TestDummy::times(20)->create('App\Post');
     }
 

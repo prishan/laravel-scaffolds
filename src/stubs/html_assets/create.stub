@@ -1,5 +1,8 @@
 @extends('layout.admin')
 
+@section('css_form')
+@endsection
+
 @section('content')
     <div class="page-header">
         <h3>Create {{Class}}</h3>
@@ -12,7 +15,7 @@
             {!! csrf_field() !!}
             @foreach($form->fields as $field)
                 <div class="form-group col-sm-6{!! (\App\Libs\ErrorDisplay::getInstance()->displayIndividual($errors, $field->attributes['id'])!='') ? ' has-error':'' !!}">
-                    <label class="control-label{!! $field->req !!}" for="{{classSingle}}_{!! $field->attributes['id'] !!}">{!! ucwords(str_replace("_"," ",$field->label)).$field->star !!}</label>
+                    <label class="control-label{!! $field->req !!}" for="{!! $field->attributes['id'] !!}">{!! ucwords(str_replace("_"," ",$field->label)).$field->star !!}</label>
                     {!! $field->output !!}
                     {!! \App\Libs\ErrorDisplay::getInstance()->displayIndividual($errors, $field->attributes['id']) !!}
                 </div>
@@ -29,4 +32,7 @@
 <!-- Laravel Javascript Validation -->
 <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js')}}"></script>
 {!! JsValidator::formRequest('App\Http\Requests\{{ClassSingle}}Request', '#{{classSingle}}-form'); !!}
+@endsection
+
+@section('js_form')
 @endsection

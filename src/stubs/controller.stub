@@ -126,7 +126,15 @@ class {{class}} extends Controller {
 	{
 		${{model_name_var_sgl}} = {{model_name_class}}::findOrFail($id);
 
-		return view('admin.{{model_name_var}}.edit', compact('{{model_name_var_sgl}}'));
+		$this->sideMenu = array_merge([
+                    array('name'=>'List','route'=>action('Admin\{{model_name_class}}Controller@index'),'icon'=>'glyphicon-th-list',),
+                    array('name'=>'View','route'=>action('Admin\{{model_name_class}}Controller@show', $id),'icon'=>'glyphicon-eye-open',),
+                ],  $this->sideMenu);
+                
+		return view('admin.{{model_name_var}}.edit')->with([
+                    '{{model_name_var_sgl}}' => ${{model_name_var_sgl}},
+                    'sideMenu' => $this->sideMenu,
+                ]);
 	}
 
 	/**

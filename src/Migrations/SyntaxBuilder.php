@@ -84,6 +84,11 @@ class SyntaxBuilder
             $fieldsc = $this->createSchemaForFormMethod($schema, $meta, 'create-content');
             return $fieldsc;
             
+        } else if ($type == 'view-form-date-scripts') {
+            
+            $fieldsc = $this->createSchemaForDateScripts($schema, $meta, 'form-date-scripts');
+            return $fieldsc;
+            
         } else {
             throw new \Exception("Type not found in syntaxBuilder");
         }
@@ -267,26 +272,48 @@ class SyntaxBuilder
             $syntax .= '}}</td>';
 
         } elseif ($type == 'view-show-content') {
-
+            
+            if(!in_array(trim($field["type"]),["foreign"])){
             // Fields to show view
-            $syntax = sprintf("<tr class=\"{{row_class}}\">\n" .
-                str_repeat(' ', 21)."<th class=\"show-view-th\">%s</th>\n" .
-                str_repeat(' ', 21)."<td>{{\$%s->%s}}</td>\n" .
-                str_repeat(' ', 16)."</tr>", ucwords(str_replace('_', ' ', $field['name'])), $meta['var_name'], strtolower($field['name']));
-
+                $syntax = sprintf("<tr class=\"{{row_class}}\">\n" .
+                            str_repeat(' ', 21)."<th class=\"show-view-th\">%s</th>\n" .
+                            str_repeat(' ', 21)."<td>{{\$%s->%s}}</td>\n" .
+                            str_repeat(' ', 16)."</tr>", ucwords(str_replace('_', ' ', $field['name'])), $meta['var_name'], strtolower($field['name']));
+            } else {
+                return '';
+            }
+            
 
         } elseif ($type == 'view-edit-content') {
-            if (trim($field["type"]) == "text") {
-                $content = "<textarea name=\"%s\" class=\"form-control\">{{ \App\Libs\ValueHelper::getOldInput(\$%s,'%s') }}</textarea>\n";
-            } else {
+            
+            
+            
+            if (in_array(trim($field["type"]),["string","char",])) {// string 
                 $content = "<input type=\"text\" name=\"%s\" class=\"form-control\" value=\"{{ \App\Libs\ValueHelper::getOldInput(\$%s,'%s') }}\"/>\n";
+            } elseif (in_array(trim($field["type"]),["text","mediumText",])) {// text
+                $content = "<textarea name=\"%s\" class=\"form-control\" rows=\"4\">{{ \App\Libs\ValueHelper::getOldInput(\$%s,'%s') }}</textarea>\n";
+                //$syntax = sprintf('$form->add(\'%s\',\'%s\', \'textarea\')->attributes(array(\'rows\'=>4));',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["decimal","double","float","integer","smallInteger","tinyInteger",])) {// numbers
+                $content = "<input type=\"text\" name=\"%s\" class=\"form-control\" value=\"{{ \App\Libs\ValueHelper::getOldInput(\$%s,'%s') }}\"/>\n";
+                //$syntax = sprintf('$form->add(\'%s\',\'%s\', \'text\');',strtolower($field['name']),ucfirst($field['name']));
+            } elseif (in_array(trim($field["type"]),["date","dateTime","time","timestamp"])) {// date
+                $content = "<div class=\"input-group date\" id=\"".strtolower($field['name'])."\">\n" .
+                    str_repeat(' ', 20)."<input type=\"text\" name=\"%s\" class=\"form-control\" value=\"{{ \App\Libs\ValueHelper::getOldInput(\$%s,'%s') }}\"/>\n" .
+                    str_repeat(' ', 20)."<span class=\"input-group-addon\">\n" . 
+                    str_repeat(' ', 24)."<span class=\"glyphicon glyphicon-calendar\"></span>\n" . 
+                    str_repeat(' ', 20)."</span>\n" . 
+                    str_repeat(' ', 16)."</div>\n";
+                //$syntax = sprintf('$form->add(\'%s\',\'%s\', \'Prishan\LaravelScaffolds\DependentClasses\Rapyd\Field\DateValidated\')->format(\'Y/m/d\');',strtolower($field['name']),ucfirst($field['name']));
+            } else {
+                return '';
             }
+            
             // Fields to show view
-            $syntax = sprintf("<div class=\"form-group\">\n" .
-                str_repeat(' ', 21)."<label for=\"%s\">%s</label>\n" .
-                str_repeat(' ', 21). $content .
-                str_repeat(' ', 21)."{!! \App\Libs\ErrorDisplay::getInstance()->displayIndividual(\$errors, \"%s\") !!}\n" .
-                str_repeat(' ', 16)."</div>", strtolower($field['name']), strtoupper($field['name']), strtolower($field['name']), $meta['var_name'], strtolower($field['name']), strtolower($field['name']));
+            $syntax = sprintf("<div class=\"form-group col-sm-6".'{!! (\App\Libs\ErrorDisplay::getInstance()->displayIndividual($errors, \'%s\')!=\'\') ? \' has-error\':\'\' !!}'."\">\n" .
+                str_repeat(' ', 16)."<label class=\"control-label\" for=\"%s\">%s</label>\n" .
+                str_repeat(' ', 16). $content .
+                str_repeat(' ', 16)."{!! \App\Libs\ErrorDisplay::getInstance()->displayIndividual(\$errors, \"%s\") !!}\n" .
+                str_repeat(' ', 12)."</div>", strtolower($field['name']), strtolower($field['name']), ucwords(str_replace("_"," ",$field['name'])), strtolower($field['name']), $meta['var_name'], strtolower($field['name']), strtolower($field['name']));
 
 
         } elseif ($type == 'view-create-content') {
@@ -341,6 +368,34 @@ class SyntaxBuilder
             } else {
                 return '';
             }
+            
+        } elseif ($type == 'view-form-date-scripts') {
+            
+            if (in_array(trim($field["type"]),["date","dateTime","time","timestamp"])) {// date
+                $syntax = str_repeat(' ',4)."$('#%s').datetimepicker({\n".
+                            str_repeat(' ',8)."format: %s\n".
+                            str_repeat(' ',4)."});";
+                switch (trim($field["type"])){
+                    case "date":
+                        $syntax = sprintf($syntax,strtolower($field['name']),"'YYYY-MM-DD'");
+                        break;
+                    case "dateTime":
+                    case "timestamp":
+                        $syntax = sprintf($syntax,strtolower($field['name']),"'YYYY-MM-DD HH:mm:ss'");
+                        break;
+                    case "time":
+                        $syntax = sprintf($syntax,strtolower($field['name']),"'HH:mm:ss'");
+                        break;
+                    default:
+                        $syntax = sprintf($syntax,strtolower($field['name']),"false");
+                        break;
+                }
+                
+            } else {
+                return '';
+            }
+            
+            return $syntax;
             
         } else {
 
@@ -405,6 +460,7 @@ class SyntaxBuilder
         $fields = array_map(function ($field) use ($meta, $type) {
             return $this->AddColumn($field, 'view-' . $type, $meta);
         }, $schema);
+        $fields = $this->cleanFields($fields, null);
         
         // set odd and even rows
         array_walk($fields, function(&$field, $key){
@@ -414,6 +470,8 @@ class SyntaxBuilder
         // Format code
         if ($type == 'index-header') {
             return implode("\n" . str_repeat(' ', 24), $fields);
+        } elseif ($type == 'edit-content') {
+            return implode("\n" . str_repeat(' ', 12), $fields);
         } else {
             // index-content
             return implode("\n" . str_repeat(' ', 20), $fields);
@@ -437,7 +495,7 @@ class SyntaxBuilder
         $fields = array_map(function ($field) use ($meta, $type) {
             return $this->AddColumn($field, 'filter-' . $type, $meta);
         }, $schema);
-        $fields = $this->cleanFields($fields);
+        $fields = $this->cleanFields($fields,4);
 
         // Format code
         if ($type == 'index-content') {
@@ -464,7 +522,7 @@ class SyntaxBuilder
         $fields = array_map(function ($field) use ($meta, $type) {
             return $this->AddColumn($field, 'grid-' . $type, $meta);
         }, $schema);
-        $fields = $this->cleanFields($fields);
+        $fields = $this->cleanFields($fields,4);
         
         // Format code
         if ($type == 'index-content') {
@@ -503,6 +561,33 @@ class SyntaxBuilder
     }
     
     /**
+     * Construct js scripts for date fields in views
+     *
+     * @param $schema
+     * @param $meta
+     * @param string $type Params 'index' or ''
+     * @return string
+     */
+    private function createSchemaForDateScripts($schema, $meta, $type = 'form-date-scripts')
+    {
+
+        if (!$schema) return '';
+
+        $fields = array_map(function ($field) use ($meta, $type) {
+            return $this->AddColumn($field, 'view-' . $type, $meta);
+        }, $schema);
+        $fields = $this->cleanFields($fields,null);
+        
+        // Format code
+        if ($type == 'form-date-scripts') {
+            return implode("\n", $fields);
+        } else {
+            return '';
+        }
+
+    }
+    
+    /**
      * Remove the empty fields from the fields array
      * Comments additional fields
      * 
@@ -510,7 +595,7 @@ class SyntaxBuilder
      * @param integer $commentAfter Use to determine the limit to comment from
      * @return array Cleaned array
      */
-    private function cleanFields(array $fields, $commentAfter = 4)
+    private function cleanFields(array $fields, $commentAfter = null)
     {
         $fields = array_values(array_filter($fields));
         array_walk($fields, function(&$field, $fieldNo, $commentAfter){

@@ -1,32 +1,37 @@
 @extends('layout.admin')
 
+@section('css_form')
+<link href="{{ asset('admins/css/bootstrap-datetimepicker.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
     <div class="page-header">
-        <h1>{{Class}} / Edit </h1>
+        <h3>Edit Pakaya {!! $pakaya->id !!}</h3>
     </div>
 
     {!! \App\Libs\ErrorDisplay::getInstance()->displayAll($errors) !!}
 
-    <div class="row">
-        <div class="col-md-12">
-
-            <form action="{{ action('Admin\{{ClassSingle}}Controller@update', ${{classSingle}}->id) }}" method="POST">
-                <input type="hidden" name="_method" value="PUT">
-                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-
-                <div class="form-group">
-                    <label for="nome">ID</label>
-                    <p class="form-control-static">{{${{classSingle}}->id}}</p>
-                </div>
-                {{content_fields}}
-
-
-
-            <a class="btn btn-default" href="{{ action('Admin\{{ClassSingle}}Controller@index') }}">Back</a>
-            <button class="btn btn-primary" type="submit" >Save</a>
-            </form>
-        </div>
+    <div class="form">
+        <form role="form" id="{{classSingle}}-form" action="{{ action('Admin\{{ClassSingle}}Controller@update', ${{classSingle}}->id) }}" method="post">
+            <input type="hidden" name="_method" value="PUT">
+            {!! csrf_field() !!}
+            <div class="form-group col-sm-6">
+                <label class="control-label" for="id">ID</label>
+                <input class="form-control" type="text" id="id" name="id" disabled="disabled" value="{{${{classSingle}}->id}}">
+            </div>
+            {{content_fields}}
+            
+            <div class="clearfix"></div>
+            <button type="submit" class="btn btn-default btn-primary col-sm-2"><span class="glyphicon glyphicon-edit"></span> Update</button>
+        </form>
     </div>
 
+@endsection
 
+@section('js_form')
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
+<script src="{{ asset('admins/js/bootstrap-datetimepicker.min.js') }}"></script>
+<script>
+{{date_field_scripts}}
+</script>
 @endsection

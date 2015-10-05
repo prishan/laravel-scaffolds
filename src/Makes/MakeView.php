@@ -198,6 +198,8 @@ class MakeView
         // Create view index content fields
         $schema = (new SyntaxBuilder)->create($schemaArray, $this->scaffoldCommandObj->getMeta(), 'view-edit-content');
         $stub = str_replace('{{content_fields}}', $schema, $stub);
+        $schema = (new SyntaxBuilder)->create($schemaArray, $this->scaffoldCommandObj->getMeta(), 'view-form-date-scripts');
+        $stub = str_replace('{{date_field_scripts}}', $schema, $stub);
 
 
         return $this;
