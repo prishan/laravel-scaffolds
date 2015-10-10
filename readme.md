@@ -9,8 +9,28 @@ Hi, this is a scaffold generator for Laravel 5. Inspired by laraviet/l5scaffold.
 
 ### Step 1: Install Through Composer
 
+Update composer.json file with below content 
+
 ```
-composer require 'prishan/laravel-scaffolds' --dev
+"require-dev": {
+    "prishan/laravel-scaffolds": "dev-master"
+},
+"repositories": [
+    {
+        "type": "vcs",
+        "url": "https://github.com/prishan/laravel-scaffolds"
+    }
+],
+"scripts": {
+    "post-update-cmd": [
+        "Prishan\\LaravelScaffolds\\Install\\InstallScripts::postInstall"
+    ]
+}
+```
+
+run 
+```
+composer update
 ```
 
 ### Step 2: Add the Service Provider
