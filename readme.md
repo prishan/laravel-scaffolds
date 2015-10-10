@@ -23,6 +23,7 @@ Update composer.json file with below content
 ],
 "scripts": {
     "post-update-cmd": [
+        "php artisan vendor:publish --provider=\"Proengsoft\\JsValidation\\JsValidationServiceProvider\" --force"
         "Prishan\\LaravelScaffolds\\Install\\InstallScripts::postInstall"
     ]
 }
